@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  email-bot:
+    build: .
+    container_name: telegram-email-bot
+    restart: always
+    volumes:
+      - ./data:/app/data
+    env_file:
+      - .env 
