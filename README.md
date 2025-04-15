@@ -40,27 +40,6 @@ EMAIL_PASSWORD=your_password
 mkdir -p data
 ```
 
-### Развертывание через Docker Registry
-
-1. На локальном компьютере соберите и загрузите образ:
-```bash
-docker build -t username/email_bot:latest .
-docker push username/email_bot:latest
-```
-
-2. На целевом сервере:
-```bash
-# Создать директорию для данных
-mkdir -p /путь/для/данных
-
-# Создать .env файл
-nano .env  # и добавить необходимые переменные
-
-# Запустить контейнер
-docker pull username/email_bot:latest
-docker run -d -v /путь/для/данных:/email_bot/data -e TZ=Europe/Moscow --name email_bot username/email_bot
-```
-
 ## Запуск с Docker Compose
 
 Запустите бота с помощью Docker Compose:
