@@ -12,6 +12,7 @@ from telegram.ext import Application, CommandHandler, ContextTypes, MessageHandl
 from dotenv import load_dotenv
 from typing import List
 import ssl
+import socket
 
 # Загрузка переменных окружения
 load_dotenv()
@@ -175,7 +176,7 @@ async def send_email(to_emails: List[str], subject: str, message: str) -> bool:
         context = ssl.create_default_context()
 
         logger.info("Подключаемся к SMTP серверу")
-        with smtplib.SMTP_SSL(smtp_server, int(smtp_port), context=context) as server:
+        with smtplib.SMTP_SSL(smtp_server, int(smtp_port), context=context, timeout=30) as server:
             logger.info("Выполняем вход")
             server.login(email_login, email_password)
 
@@ -184,6 +185,9 @@ async def send_email(to_emails: List[str], subject: str, message: str) -> bool:
 
         logger.info("Сообщение успешно отправлено")
         return True
+    except socket.timeout:
+        logger.error("Таймаут при отправке email: превышено время ожидания 30 секунд")
+        return False
     except Exception as e:
         logger.error(f"Ошибка при отправке email: {str(e)}")
         logger.exception("Подробная информация об ошибке:")
